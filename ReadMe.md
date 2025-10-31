@@ -50,6 +50,21 @@ cp .env.example .env
 ```
 
 4. Configure your environment variables in `.env`:
+
+**For MongoDB Atlas (Cloud):**
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/<database-name>?retryWrites=true&w=majority
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+EMAIL_FROM="Swanari Shop <noreply@swanari.com>"
+```
+
+**For Local MongoDB:**
 ```env
 PORT=5000
 NODE_ENV=development
@@ -62,7 +77,35 @@ EMAIL_PASSWORD=your-app-password
 EMAIL_FROM="Swanari Shop <noreply@swanari.com>"
 ```
 
-5. Start MongoDB service:
+## MongoDB Atlas Setup
+
+To use MongoDB Atlas (recommended for production):
+
+1. Create a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a new cluster (free tier M0 is sufficient for development)
+3. Create a database user:
+   - Go to "Database Access" in the left sidebar
+   - Click "Add New Database User"
+   - Choose authentication method (username/password recommended)
+   - Set username and password
+   - Grant "Read and write to any database" privileges
+4. Whitelist your IP address:
+   - Go to "Network Access" in the left sidebar
+   - Click "Add IP Address"
+   - **Recommended**: Add your current IP address for better security
+   - **Alternative** (convenience, less secure): Click "Allow Access from Anywhere" (0.0.0.0/0)
+     - ⚠️ **Warning**: This allows connections from any IP address. Only use this for testing and never in production.
+   - For production: Always add only specific IP addresses of your servers
+5. Get your connection string:
+   - Go to "Database" and click "Connect" on your cluster
+   - Choose "Connect your application"
+   - Copy the connection string (looks like: `mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/`)
+   - Replace `<username>` with your database username
+   - Replace `<password>` with your database password
+   - Add your database name after the `/` (e.g., `swanari-shop`)
+6. Update your `.env` file with the complete connection string
+
+5. Start MongoDB service (only needed for local MongoDB):
 ```bash
 # On macOS with Homebrew
 brew services start mongodb-community
