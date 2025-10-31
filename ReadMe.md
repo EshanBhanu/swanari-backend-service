@@ -92,8 +92,10 @@ To use MongoDB Atlas (recommended for production):
 4. Whitelist your IP address:
    - Go to "Network Access" in the left sidebar
    - Click "Add IP Address"
-   - For development: click "Allow Access from Anywhere" (0.0.0.0/0)
-   - For production: add your specific IP addresses
+   - **Recommended**: Add your current IP address for better security
+   - **Alternative** (convenience, less secure): Click "Allow Access from Anywhere" (0.0.0.0/0)
+     - ⚠️ **Warning**: This allows connections from any IP address. Only use this for testing and never in production.
+   - For production: Always add only specific IP addresses of your servers
 5. Get your connection string:
    - Go to "Database" and click "Connect" on your cluster
    - Choose "Connect your application"
