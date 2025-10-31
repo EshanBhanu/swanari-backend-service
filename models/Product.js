@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+  productId: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
+  },
   name: {
     type: String,
     required: true,
@@ -16,9 +22,9 @@ const productSchema = new mongoose.Schema({
     min: 0
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: true
+    type: String,
+    required: true,
+    trim: true
   },
   imageUrl: {
     type: String
@@ -36,7 +42,14 @@ const productSchema = new mongoose.Schema({
     type: String
   }]
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: {
+    transform: function(doc, ret) {
+      delete ret._id;
+      delete ret.__v;
+      return ret;
+    }
+  }
 });
 
 module.exports = mongoose.model('Product', productSchema);

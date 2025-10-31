@@ -19,11 +19,18 @@ exports.addCategory = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
     
-    const { name, description } = req.body;
-    const category = new Category({ name, description });
+    const { categoryId, name, description } = req.body;
+    const category = new Category({ categoryId, name, description });
     await category.save();
     res.status(201).json(category);
   } catch (error) {
+    // handle duplicate key error (unique fields)
+    if (error.name === 'MongoError' && error.code === 11000) {
+      // determine which field caused duplicate
+      const dupKey = Object.keys(error.keyValue || {})[0];
+      return res.status(400).json({ message: `Duplicate ${dupKey}: ${error.keyValue[dupKey]}` });
+    }
+
     res.status(400).json({ message: 'Error adding category', error: error.message });
   }
 };
@@ -31,8 +38,8 @@ exports.addCategory = async (req, res) => {
 // Delete category
 exports.deleteCategory = async (req, res) => {
   try {
-    const { id } = req.params;
-    const category = await Category.findByIdAndDelete(id);
+    const { categoryId } = req.params;
+    const category = await Category.findOneAndDelete({ categoryId });
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }

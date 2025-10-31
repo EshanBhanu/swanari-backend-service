@@ -91,18 +91,20 @@ The server will start on `http://localhost:5000` (or the port specified in your 
 
 - `GET /api/categories` - Get all categories
 - `POST /api/categories` - Create a new category
-  - Body: `{ "name": "string", "description": "string" }`
-- `DELETE /api/categories/:id` - Delete a category
+  - Body: `{ "categoryId": "string", "name": "string", "description": "string" }`
+  - Note: `categoryId` is required and must be unique (e.g., "women-dresses", "casual-tops")
+- `DELETE /api/categories/:categoryId` - Delete a category by categoryId
 
 ### Products
 
 - `GET /api/products` - Get all products
-- `GET /api/products/:id` - Get a specific product
+- `GET /api/products/:productId` - Get a specific product by productId
 - `GET /api/products/category/:categoryId` - Get products by category
 - `POST /api/products` - Create a new product
-  - Body: `{ "name": "string", "description": "string", "price": number, "category": "categoryId", "imageUrl": "string", "stock": number, "sizes": ["XS", "S", "M"], "colors": ["red", "blue"] }`
-- `PUT /api/products/:id` - Update a product
-- `DELETE /api/products/:id` - Delete a product
+  - Body: `{ "productId": "string", "name": "string", "description": "string", "price": number, "category": "categoryId", "imageUrl": "string", "stock": number, "sizes": ["XS", "S", "M"], "colors": ["red", "blue"] }`
+  - Note: `productId` and `category` must match existing categoryId (e.g., "Tops")
+- `PUT /api/products/:productId` - Update a product by productId
+- `DELETE /api/products/:productId` - Delete a product by productId
 
 ### Cart
 
@@ -120,18 +122,20 @@ The server will start on `http://localhost:5000` (or the port specified in your 
 ## Database Collections
 
 ### Category
+- `categoryId`: String (required, unique) - Client-provided unique identifier
 - `name`: String (required, unique)
 - `description`: String
 - `timestamps`: createdAt, updatedAt
 
 ### Product
+- `productId`: String (required, unique) - Client-provided unique identifier
 - `name`: String (required)
 - `description`: String (required)
 - `price`: Number (required)
-- `category`: ObjectId (ref: Category)
+- `category`: String (required) - Must match an existing categoryId
 - `imageUrl`: String
 - `stock`: Number (default: 0)
-- `sizes`: Array of Strings
+- `sizes`: Array of Strings (enum: XS, S, M, L, XL, XXL)
 - `colors`: Array of Strings
 - `timestamps`: createdAt, updatedAt
 
