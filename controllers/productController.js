@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const { validationResult } = require('express-validator');
 
 // Get all products
 exports.getAllProducts = async (req, res) => {
@@ -38,6 +39,11 @@ exports.getProductsByCategory = async (req, res) => {
 // Add new product
 exports.addProduct = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    
     const product = new Product(req.body);
     await product.save();
     const populatedProduct = await Product.findById(product._id).populate('category');

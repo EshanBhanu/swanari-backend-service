@@ -1,8 +1,14 @@
 const Cart = require('../models/Cart');
+const { validationResult } = require('express-validator');
 
 // Add item to cart
 exports.addToCart = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    
     const { userId, product, quantity, size, color } = req.body;
     
     let cart = await Cart.findOne({ userId });

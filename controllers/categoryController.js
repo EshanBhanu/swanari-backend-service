@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const { validationResult } = require('express-validator');
 
 // Get all categories
 exports.getAllCategories = async (req, res) => {
@@ -13,6 +14,11 @@ exports.getAllCategories = async (req, res) => {
 // Add new category
 exports.addCategory = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    
     const { name, description } = req.body;
     const category = new Category({ name, description });
     await category.save();

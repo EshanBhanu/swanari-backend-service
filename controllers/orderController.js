@@ -1,10 +1,16 @@
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const { sendOrderConfirmation } = require('../config/email');
+const { validationResult } = require('express-validator');
 
 // Create new order
 exports.createOrder = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    
     const { userId, items, customerEmail, customerName, shippingAddress } = req.body;
     
     // Calculate total amount
